@@ -12,6 +12,6 @@
     
     return:
     {  
-    "status": "sucess",  
+    "status": "succeed",  
     "text": "你都知道你还问[不屑脸]，哈哈党"  
     }  
