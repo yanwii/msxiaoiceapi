@@ -55,8 +55,7 @@ class xiaoiceApi():
                 return self.dicts("successed", text)
             else:
                 return self.dicts("failed", page.json()['msg'])
-        except JSONDecodeError:
-            return self.dicts("error", "请查看tmp下页面的内容")
+        
         except Exception as e:
             return self.dicts("error", e)
     
