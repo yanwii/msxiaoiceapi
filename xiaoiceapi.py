@@ -72,6 +72,7 @@ class xiaoiceApi():
         '''
         times = 1
         while times:
+            times += 1
             response = requests.get("http://weibo.com/aj/message/getbyid?ajwvr=6&uid=5175429989&count=1&_t=0" , headers=self.headers)
             self.savePage(response.text, "./tmp/response.txt")
             soup = BeautifulSoup(response.json()['data']['html'], "lxml")
