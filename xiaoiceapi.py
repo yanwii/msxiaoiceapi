@@ -52,7 +52,7 @@ class xiaoiceApi():
             self.savePage(page.text, "./tmp/postpage.txt")
             if page.json()['code'] == '100000':
                 text = self.loop(input_strs)
-                return self.dicts("successed", text)
+                return self.dicts("succeed", text)
             else:
                 return self.dicts("failed", page.json()['msg'])
         
