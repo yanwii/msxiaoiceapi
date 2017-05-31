@@ -1,6 +1,7 @@
 import requests
 import json
 import time
+import sys
 from bs4 import BeautifulSoup
 from flask import Flask,request,jsonify
 
@@ -23,8 +24,6 @@ class xiaoiceApi():
                 line = headers.readline().strip()            
 
     def chat(self, input_strs):
-        if not self.headers:
-            return self.dicts("error", "请打开浏览器 复制并将headers放入headers.txt中")
         '''
         聊天
         
@@ -34,6 +33,8 @@ class xiaoiceApi():
                 status      状态  
                 text        内容        
         '''
+        if not self.headers:
+            return self.dicts("error", "请打开浏览器 复制并将headers放入headers.txt中")
         data = {
             'location':'msgdialog',
             'module':'msgissue',
@@ -55,7 +56,6 @@ class xiaoiceApi():
                 return self.dicts("succeed", text)
             else:
                 return self.dicts("failed", page.json()['msg'])
-        
         except Exception as e:
             return self.dicts("error", e)
     
@@ -95,6 +95,6 @@ class xiaoiceApi():
             return jsonify(ans)
         app.run()
 
-xb = xiaoiceApi()
-xb.api()
-    
+if __name__ == '__main__':
+    xb = xiaoiceApi()
+    xb.api()
