@@ -78,7 +78,7 @@ class xiaoiceApi():
             text = soup.find("p", class_='page').text
             if text != input_strs or times > 20:
                 break
-            time.sleep(1)
+            time.sleep(0.3)
         return text
             
     def savePage(self, text, file):
