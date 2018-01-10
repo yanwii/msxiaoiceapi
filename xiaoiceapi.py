@@ -20,7 +20,8 @@ class xiaoiceApi():
             line = headers.readline().strip()
             while line:
                 key = line.split(":")[0]
-                self.headers[key] = line[len(key)+1:]
+                #firefox里的原始头冒号后面会多出一个空格，需除去
+                self.headers[key] = line[len(key)+1:].strip()
                 line = headers.readline().strip()            
 
     def chat(self, input_strs):
@@ -48,7 +49,8 @@ class xiaoiceApi():
         }
         
         try:
-            url = 'http://weibo.com/aj/message/add?ajwvr=6'
+            #原http的api已改为https的api
+            url = 'https://weibo.com/aj/message/add?ajwvr=6'
             page = requests.post(url, data=data, headers=self.headers)
             self.savePage(page.text, "./tmp/postpage.txt")
             if page.json()['code'] == '100000':
@@ -72,7 +74,8 @@ class xiaoiceApi():
         times = 1
         while times:
             times += 1
-            response = requests.get("http://weibo.com/aj/message/getbyid?ajwvr=6&uid=5175429989&count=1&_t=0" , headers=self.headers)
+            #同上，原http的api已改为https的api,另外headers用全反而无法获取页面，只需用到cookies
+            response = requests.get("https://weibo.com/aj/message/getbyid?ajwvr=6&uid=5175429989&count=1&_t=0" , headers={"Cookie":self.headers["Cookie"]})
             self.savePage(response.text, "./tmp/response.txt")
             soup = BeautifulSoup(response.json()['data']['html'], "lxml")
             text = soup.find("p", class_='page').text
