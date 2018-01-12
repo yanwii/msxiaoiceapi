@@ -17,7 +17,7 @@
 
 
     api模式：
-    py xiaoiceapi.py
+    python3 xiaoiceapi.py
     然后在浏览器中输入
     http://127.0.0.1:5000/?que=你是谁
     
