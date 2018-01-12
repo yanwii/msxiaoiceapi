@@ -30,8 +30,17 @@
 
     return:
     {  
-    "status": "succeed",  
-    "text": "你都知道你还问[不屑脸]，哈哈党"  
+        "status": "succeed",  
+        "text": "你都知道你还问[不屑脸]，哈哈党"  
+    }
+
+
+    # 图片
+    xb.chat("你的照片")
+    {
+        'status': 200, 
+        'type': 'img', 
+        'text': 'http://upload.api.weibo.com/2/mss/msget?source=351354573&fid=4195427450566728'
     }  
 
     
