@@ -5,7 +5,6 @@ import sys
 from bs4 import BeautifulSoup
 from flask import Flask,request,jsonify
 import re
-from PIL import Image
 
 class xiaoiceApi():
     
@@ -55,18 +54,18 @@ class xiaoiceApi():
             page = requests.post(url, data=data, headers=self.headers)
             self.savePage(page.text, "./tmp/postpage.txt")
             if page.json()['code'] == '100000':
-                text = self.loop(input_strs)
-                return self.dicts("succeed", text)
+                code, text, res_type = self.loop(input_strs)
+                return self.dicts(code, res_type, text)
             else:
-                return self.dicts("failed", page.json()['msg'])
+                return self.dicts("500", "failed", page.json()['msg'])
         except Exception as e:
-            return self.dicts("error", e)
+            return self.dicts("500", "error", e)
     
-    def dicts(self, status, text):
+    def dicts(self, status, res_type, text):
         '''
             包装return
         '''
-        return {"status":status, "text":text}
+        return {"status":status, "type":res_type, "text":text}
 
     def loop(self, input_strs):
         '''  
@@ -81,11 +80,14 @@ class xiaoiceApi():
             soup = BeautifulSoup(response.json()['data']['html'], "lxml")           
             text = soup.find("p", class_='page')
             if text:
-                text = text.text
-                if text == input_strs:
+                if text.text == input_strs:
+                    time.sleep(0.3)
                     continue
             elif "收起" in soup.get_text():
+                #返回imgURL
                 imgUrl = soup.find(href=re.compile('msget')).get('href')
+                return 200, imgUrl, "img"
+                '''
                 text = "图片地址： " + imgUrl
                 picRespone = requests.get(imgUrl, headers={"Cookie":self.headers["Cookie"]})
                 if picRespone.status_code == 200:
@@ -93,21 +95,23 @@ class xiaoiceApi():
                         f.write(picRespone.content)
                 img = Image.open('pic.jpg')
                 img.show()
+                '''
+                
             elif "mp3" in soup.get_text():
                 mp3Url = soup.find(href=re.compile('msget')).get('href')
+                return 200, mp3Url,"voice"
+                # 返回语音URL
+
+                '''
                 text = "语音地址： " + imgUrl
                 picRespone = requests.get(imgUrl, headers={"Cookie":self.headers["Cookie"]})
                 if picRespone.status_code == 200:
                     with open('voice.mp3', 'wb') as f:
                         f.write(picRespone.content)
-            else:
-                print("第{}次重试".format(times))
-                continue
-            time.sleep(0.3)
-            return text
+                '''
+            return 200, text.text, "text"
         text = "错误： 已达到最大重试次数"
-        print (text)
-        return text
+        return 500, text, "failed"
             
     def savePage(self, text, file):
         with open(file, "w") as f:

@@ -1,3 +1,4 @@
 import xiaoiceapi 
 xb = xiaoiceapi.xiaoiceApi()
-print(xb.chat("你是谁"))
+print(xb.chat("你的照片"))
+    

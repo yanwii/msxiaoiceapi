@@ -1,5 +1,9 @@
 # msxiaoiceapi
-  
+
+## UPDATE
+
+- 支持图片  
+
 ## 说明   
 需要  python3+ BeautifulSoup flask 目前暂时只支持文字  
 
