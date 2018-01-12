@@ -4,7 +4,8 @@ import time
 import sys
 from bs4 import BeautifulSoup
 from flask import Flask,request,jsonify
-
+import re
+from PIL import Image
 
 class xiaoiceApi():
     
@@ -72,16 +73,40 @@ class xiaoiceApi():
             刷新直到获取到回答
         '''
         times = 1
-        while times:
+        while times <= 20:
             times += 1
             #同上，原http的api已改为https的api,另外headers用全反而无法获取页面，只需用到cookies
             response = requests.get("https://weibo.com/aj/message/getbyid?ajwvr=6&uid=5175429989&count=1&_t=0" , headers={"Cookie":self.headers["Cookie"]})
             self.savePage(response.text, "./tmp/response.txt")
-            soup = BeautifulSoup(response.json()['data']['html'], "lxml")
-            text = soup.find("p", class_='page').text
-            if text != input_strs or times > 20:
-                break
+            soup = BeautifulSoup(response.json()['data']['html'], "lxml")           
+            text = soup.find("p", class_='page')
+            if text:
+                text = text.text
+                if text == input_strs:
+                    continue
+            elif "收起" in soup.get_text():
+                imgUrl = soup.find(href=re.compile('msget')).get('href')
+                text = "图片地址： " + imgUrl
+                picRespone = requests.get(imgUrl, headers={"Cookie":self.headers["Cookie"]})
+                if picRespone.status_code == 200:
+                    with open('pic.jpg', 'wb') as f:
+                        f.write(picRespone.content)
+                img = Image.open('pic.jpg')
+                img.show()
+            elif "mp3" in soup.get_text():
+                mp3Url = soup.find(href=re.compile('msget')).get('href')
+                text = "语音地址： " + imgUrl
+                picRespone = requests.get(imgUrl, headers={"Cookie":self.headers["Cookie"]})
+                if picRespone.status_code == 200:
+                    with open('voice.mp3', 'wb') as f:
+                        f.write(picRespone.content)
+            else:
+                print("第{}次重试".format(times))
+                continue
             time.sleep(0.3)
+            return text
+        text = "错误： 已达到最大重试次数"
+        print (text)
         return text
             
     def savePage(self, text, file):
