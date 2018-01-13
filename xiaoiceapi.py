@@ -8,10 +8,13 @@ import re
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
+import os
 
 class xiaoiceApi():
 
     def __init__(self):
+        if not os.path.exists("./tmp"):
+            os.makedirs("./tmp")
         self.headers = {}
         #self.cookies = self.loadCookies()
         self.loadheaders()
@@ -105,9 +108,13 @@ class xiaoiceApi():
                 return self.dicts("500", "failed", page.json()['msg'])
         except Exception as e:
             print("对话失败，重新获取cookies")
-            self.headers["Cookie"] = self.loadCookies()
-            self.dumpheaders()
-            return self.dicts("500", "error", e)
+            if not os.path.exists("./password"):
+                print("请在password中设置好用户名和密码")
+                return self.dicts("500", "error", e)
+            else:
+                self.headers["Cookie"] = self.loadCookies()
+                self.dumpheaders()
+                return self.dicts("500", "error", e)
 
     def dicts(self, status, res_type, text):
         '''
