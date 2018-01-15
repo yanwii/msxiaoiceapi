@@ -1,1 +1,9 @@
 headers.txt
+
+password
+testXiaoBing.ipynb
+geckodriver.log
+
+__pycache__/
+.ipynb_checkpoints/
+tmp/
