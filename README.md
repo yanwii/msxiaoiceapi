@@ -5,7 +5,7 @@
 - 支持图片  
 
 ## 说明   
-需要  python3+ BeautifulSoup flask 目前暂时只支持文字  
+需要  python3+ BeautifulSoup flask 
 
 登陆微博 并将headers保存在根目录headers.txt中  
 确保已经领养小冰 这里我提供了一个测试账号
@@ -43,4 +43,5 @@
         'text': 'http://upload.api.weibo.com/2/mss/msget?source=351354573&fid=4195427450566728'
     }  
 
-    
+## 感谢 
+@QingGo
